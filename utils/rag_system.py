@@ -169,7 +169,7 @@ class SimpleRAGSystem:
         except Exception as e:
             return f"Error processing PDF: {str(e)}"
 
-    def search(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
+    def search(self, query: str, n_results: int = 5, score_thresold: float = 1.0) -> List[Dict[str, Any]]:
         """
         Search for relevant documents using FAISS
 
@@ -198,7 +198,7 @@ class SimpleRAGSystem:
 
             search_results = []
             for i, (score, idx) in enumerate(zip(scores[0], indices[0])):
-                if idx >= 0:  # Valid index
+                if idx >= 0 and score <= score_thresold:  # Valid index
                     search_results.append({
                         "content": self.documents[idx],
                         "metadata": self.metadata[idx],
