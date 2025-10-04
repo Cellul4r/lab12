@@ -8,6 +8,7 @@ import streamlit as st
 import sys
 import os
 from pathlib import Path
+from datetime import datetime
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -26,7 +27,7 @@ def display_chat_messages():
     """Display chat messages"""
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+            st.markdown(f"{message["content"]} - {datetime.now().strftime("%d/%B/%Y %H:%M:%S")}")
 
 
 def main():
@@ -116,6 +117,11 @@ def main():
         - Add response streaming
         """)
 
+    if st.button("Clear Chat"):
+        st.session_state.messages = []
+        st.session_state.llm_client = None
+        st.rerun()
+        
     # Main chat interface
     if not st.session_state.llm_client:
         st.warning("⚠️ Please initialize a model in the sidebar first!")
