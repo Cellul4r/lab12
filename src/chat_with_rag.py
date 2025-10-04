@@ -122,6 +122,15 @@ def main():
             help="Number of document chunks to retrieve"
         )
 
+        relevance_score_thresholds = st.slider(
+            "Relevance Score Threshold",
+            min_value=0.0,
+            max_value=5.0,
+            value=1.0,
+            step=0.1,
+            help="Threshold for filtering search results based on relevance score. lower is more relevant."
+        )
+
         # Initialize systems
         col1, col2 = st.columns(2)
 
@@ -294,7 +303,8 @@ def main():
                 with st.spinner("Searching documents and generating response..."):
                     # Get relevant context from RAG system
                     context = st.session_state.rag_system.get_context_for_query(
-                        prompt, max_context_length=2000)
+                        prompt, max_context_length=2000, 
+                        n_results=n_results, score_threshold=relevance_score_thresholds)
 
                     # Create enhanced prompt with context
                     enhanced_prompt = f"""

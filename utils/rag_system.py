@@ -211,7 +211,9 @@ class SimpleRAGSystem:
         except Exception as e:
             return [{"error": f"Search failed: {str(e)}"}]
 
-    def get_context_for_query(self, query: str, max_context_length: int = 2000) -> str:
+    def get_context_for_query(self, query: str, max_context_length: int = 2000, 
+                              n_results: int = 5, 
+                              score_threshold: float = 1.0) -> str:
         """
         Get relevant context for a query, formatted for LLM consumption.
 
@@ -222,7 +224,7 @@ class SimpleRAGSystem:
         Returns:
             Formatted context string
         """
-        search_results = self.search(query, n_results=5)
+        search_results = self.search(query, n_results, score_threshold)
 
         if not search_results or "error" in search_results[0]:
             return "No relevant context found."
