@@ -1,11 +1,20 @@
 import streamlit as st
+import random
 
 # Hands-On Exercise 0.1: Run the Echo Bot
 st.title("My First Chat Bot")
 
+# Clear chat history button
+if st.button("Clear Chat History"):
+    st.session_state.messages = []
+    st.rerun()
+
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+# Sidebar information
+st.sidebar.write(f"Toltal messages: {len(st.session_state.messages)}")
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
@@ -19,9 +28,17 @@ if prompt := st.chat_input("What is up?"):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    response = f"You said: {prompt}"
+    responses = [
+        f"Echo: {prompt}",
+        f"You said: {prompt}",
+        f"I heard: {prompt}",
+        f"Repeating: {prompt}"
+    ]
+
+    response = random.choice(responses)
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         st.markdown(response)
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
+    st.rerun()
